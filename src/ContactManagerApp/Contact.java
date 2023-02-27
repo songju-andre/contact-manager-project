@@ -1,5 +1,8 @@
 package src.ContactManagerApp;
 
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,10 +13,15 @@ import java.util.*;
 public class Contact  {
     Scanner sc = new Scanner(System.in);
 
+    final static String outputFilePath = "/Users/songjuoh/Desktop/CodeUp/IdeaProjects/contactManagerProject/src/ContactManagerApp/contacts.txt";
+
+
 
     public static void main(String[] args) {
 
 //        ContactFunctions functions = new ContactFunctions();
+
+
 
         Path pathToDirectory = Paths.get("src/ContactManagerApp");
         Path pathToTxtfile = Paths.get("src/ContactManagerApp/contacts.txt");
@@ -26,17 +34,72 @@ public class Contact  {
 //        Map<String, Student> students = new HashMap<>();
 
 
-        Clients[] clients = new Clients[3];
-        clients[0] = new Clients("Songju", "Oh", 1112223333);
+//        Clients[] clients = new Clients[3];
+//        clients[0] = new Clients("Songju", "Oh", 1112223333);
 
 
-        HashMap<String,Integer> clientTest = new HashMap<>();
-        clientTest.put("Songju Oh", 1112223333);
-        clientTest.put("Alex Young", 1112223333);
-        clientTest.put("Jane Oh", 1112223333);
+//        HashMap<Clients,String> clientTest = new HashMap<>();
+//        Clients songju = new Clients("Songju Oh");
+//        clientTest.put(songju, "3335557777");
+//
+//        Clients andre = new Clients("Andre");
+//        clientTest.put(andre, "1112223333");
+
+
+//        System.out.println(clientTest.keySet());
+
+
+        HashMap<String,String> clientTest = new HashMap<>();
+        clientTest.put("Songju Oh", "1112223333");
+        clientTest.put("Alex Young", "1112223333");
+        clientTest.put("Jane Oh", "1112223333");
 
         System.out.println(clientTest);
+
+
+        File file = new File(outputFilePath);
+
+
+        BufferedWriter bf = null;;
+
+        try{
+            //create new BufferedWriter for the output file
+            bf = new BufferedWriter( new FileWriter(file) );
+
+            //iterate map entries
+            for(Map.Entry<String, String> entry : clientTest.entrySet()){
+
+                //put key and value separated by a colon
+                bf.write( entry.getKey() + "|" + entry.getValue() );
+
+                //new line
+                bf.newLine();
+            }
+            bf.flush();
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }finally{
+
+            try{
+                //always close the writer
+                bf.close();
+            }catch(Exception e){}
+        }
+
+
+
+
+
+
 //        System.out.printf("%s %s", clientTest.get());
+
+
+//        putArrayInText(pathToTxtfile,clientTest);
+
+
+
+
 
 
 
@@ -134,6 +197,7 @@ public class Contact  {
 
 
 
+
 //        try{
 //            Files.writeString(pathToFile,firstName, StandardOpenOption.APPEND);
 //            Files.writeString(pathToFile,lastName, StandardOpenOption.APPEND);
@@ -217,13 +281,13 @@ public class Contact  {
 
 
 
-    public static void putArrayInText (Path pathToFile, List<String> array){
-        try{
-            Files.write(pathToFile, array);
-        }catch (IOException iox){
-            iox.printStackTrace();
-        }
-    }
+//    public static void putArrayInText (Path pathToFile, Arrays<String> array){
+//        try{
+//            Files.write(pathToFile, array);
+//        }catch (IOException iox){
+//            iox.printStackTrace();
+//        }
+//    }
 
     public static void addToList(Path pathToFile, String input){
         /* * Writing(Appending) on the list file located in the 'pathToFile' input  */
