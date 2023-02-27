@@ -31,11 +31,7 @@ public class Clients {
     }
 
 
-
-
-
     public String getPhoneNumString() { return  phoneNumString;}
-
 
 
     public String getFullName() { return  fullName;}
