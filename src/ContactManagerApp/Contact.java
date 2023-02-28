@@ -1,28 +1,11 @@
 package src.ContactManagerApp;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.*;
-
 import static src.ContactManagerApp.ContactFunctions.*;
 
 public class Contact  {
-    Scanner sc = new Scanner(System.in);
-
-    final static String outputFilePath = "/Users/songjuoh/Desktop/CodeUp/IdeaProjects/contactManagerProject/src/ContactManagerApp/contacts.txt";
-
-
 
     public static void main(String[] args) {
-//        Path pathToDirectory = Paths.get("src/ContactManagerApp");
-//        Path pathToTxtfile = Paths.get("src/ContactManagerApp/contacts.txt");
-//        createTxtFile(pathToDirectory, "contacts");
-//
-//        String[] clients = { "John Doe | 561-422-3333", "Marry Jane | 321-222-3420", "Axaxander King | 211-322-3444"};
-//        putArrayInText(pathToTxtfile, List.of(clients));
+
          askUser();
 //        /*! HashMap Approach */
 //        HashMap<String,String> clientTest = new HashMap<>();
