@@ -20,9 +20,8 @@ public class ContactFunctions extends Clients {
     }
 
 
-
-
-
+    /*
+     *------ Combines all the other methods and run together ------*/
     public static void askUser(){
         boolean wantMore = true;
         do{
@@ -44,7 +43,7 @@ public class ContactFunctions extends Clients {
 
             }else if(answerMain == 2){
 
-                addToList2();
+                addToList();
 
             }else if(answerMain == 3){
                 System.out.println("Please enter name");
@@ -69,44 +68,8 @@ public class ContactFunctions extends Clients {
     }
 
 
-
-
-    /* * Create new file directory in the file path */
-    /* * (ex) src/data       */
-    public static void createDirectory (Path pathToFile, String name){
-        Path dataDir = Paths.get(""+pathToFile+"/"+name); // create file directory
-        try{
-            if (Files.notExists(dataDir)){
-                Files.createDirectories(dataDir);
-            }else{
-                System.out.println("That directory already exists!");
-            }
-        }catch (IOException iox){
-            System.out.println("Couldn't create the directory!");
-            iox.printStackTrace();
-        }
-    }
-
-
-    /* * Create new txt file in the file path */
-    /* * (ex) src/data       */
-    public static void createTxtFile (Path pathToFile, String name){
-        Path pathToMyList = Paths.get(""+pathToFile+"/"+name+".txt"); // create txt file
-        try{
-            if (Files.notExists(pathToMyList)){
-                Files.createFile(pathToMyList);
-            }else{
-                System.out.println("That file already exists!");
-            }
-        }catch (IOException iox){
-            System.out.println("Couldn't create the file!");
-            iox.printStackTrace();
-        }
-    }
-
-
-
-
+    /*
+     *------ Read the text file and print the list ------*/
     public static void readFileAndOutput (){
         /* * Reading through the list file located in the 'pathToFile' input and put them into new Array 'currentList'  */
         List<String> currentList = new ArrayList<>();
@@ -120,6 +83,8 @@ public class ContactFunctions extends Clients {
     }
 
 
+    /*
+     *------ Read the text file and print the 'Filtered' list ------*/
     public static void readFileAndFilter (String input){
         /* * Reading through the list file located in the 'pathToTxtfile' input and put them into new Array 'currentList'  */
         List<String> currentList = new ArrayList<>();
@@ -139,18 +104,9 @@ public class ContactFunctions extends Clients {
 
     }
 
-
-
-    public static void putArrayInText (Path pathToFile, List<String> array){
-        try{
-            Files.write(pathToFile, array);
-        }catch (IOException iox){
-            iox.printStackTrace();
-        }
-    }
-
-
-    public static void addToList2(){
+    /*
+     *------ Add new contact and Update the text file ------*/
+    public static void addToList(){
 
         /* * Reading through the list file located in the 'pathToFile' input  */
         List<String> ititalList = new ArrayList<>();
@@ -175,7 +131,7 @@ public class ContactFunctions extends Clients {
                     removeFromList(name);
                     overwrite = true;
                 }else{
-                    addToList2();
+                    addToList();
                 }
             }else{
                 overwrite = true;
@@ -212,32 +168,9 @@ public class ContactFunctions extends Clients {
 
     }
 
-    public static void addToList( String input){
-        /* * Writing(Appending) on the list file located in the 'pathToFile' input  */
-        String[] splitContact =   input.split("[|]");
-        String name = splitContact[0];
-        String phoneNum = splitContact[1];
-        phoneNum = input.replaceFirst("(\\d{3})(\\d{3})(\\d+)","$1-$2-$3 ");
-        String joined = String.join("\n" ,name, phoneNum);
-        System.out.println(joined);
 
-        //                System.out.printf("%-6d | %-7d | %-5d",incre,squared,cubed);
-        try{
-            Files.writeString(pathToTxtfile, joined, StandardOpenOption.APPEND);
-        } catch (IOException iox){
-            iox.printStackTrace();
-        }
-        /* * Reading through the list file located in the 'pathToTxtfile' input  */
-        List<String> currentList = new ArrayList<>();
-        try{
-            currentList = Files.readAllLines(pathToTxtfile);  // going to read all of my list
-        }catch (IOException iox){
-            iox.printStackTrace();
-        }
-        printList( currentList);
-
-    }
-
+    /*
+     *------ Remove a contact and Update the text file ------*/
     public static void removeFromList ( String input){
         /* * Reading through the list file located in the 'pathToFile' input  */
         List<String> currentList = new ArrayList<>();
@@ -263,6 +196,9 @@ public class ContactFunctions extends Clients {
         }
     }
 
+
+    /*
+     *------ Print out all of the list from array input ------*/
     public static void printList(List<String> arrays){
         /* * Print out the list file located in the 'pathToFile' input  */
         System.out.println("| Name            |  Phone number |\n-----------------------------------");
@@ -273,5 +209,55 @@ public class ContactFunctions extends Clients {
         }
 
     }
+
+
+
+
+    /*
+     *------ Add array list into a text file ------*/
+    public static void putArrayInText (Path pathToFile, List<String> array){
+        try{
+            Files.write(pathToFile, array);
+        }catch (IOException iox){
+            iox.printStackTrace();
+        }
+    }
+
+
+    /*
+    * Create new file directory in the file path
+    * (ex) src/data       */
+    public static void createDirectory (Path pathToFile, String name){
+        Path dataDir = Paths.get(""+pathToFile+"/"+name); // create file directory
+        try{
+            if (Files.notExists(dataDir)){
+                Files.createDirectories(dataDir);
+            }else{
+                System.out.println("That directory already exists!");
+            }
+        }catch (IOException iox){
+            System.out.println("Couldn't create the directory!");
+            iox.printStackTrace();
+        }
+    }
+
+
+    /*
+    * Create new txt file in the file path
+    * (ex) src/data/text.txt       */
+    public static void createTxtFile (Path pathToFile, String name){
+        Path pathToMyList = Paths.get(""+pathToFile+"/"+name+".txt"); // create txt file
+        try{
+            if (Files.notExists(pathToMyList)){
+                Files.createFile(pathToMyList);
+            }else{
+                System.out.println("That file already exists!");
+            }
+        }catch (IOException iox){
+            System.out.println("Couldn't create the file!");
+            iox.printStackTrace();
+        }
+    }
+
 
 }
