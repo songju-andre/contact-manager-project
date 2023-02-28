@@ -9,11 +9,8 @@ import java.util.*;
 
 
 public class ContactFunctions extends Clients {
-
     static Scanner sc = new Scanner(System.in);
     static Path pathToTxtfile = Paths.get("src/ContactManagerApp/contacts.txt");
-
-
 
     public ContactFunctions(String firstName, String lastName, int phoneNum) {
         super(firstName, lastName, phoneNum);
@@ -142,16 +139,24 @@ public class ContactFunctions extends Clients {
         String number = sc.nextLine();
         int i = 0;
         while (overwrite == true && i<1){
-            /* * Writing(Appending) on the list file located in the 'pathToFile' input  */
-            String phoneNum = number.replaceFirst("(\\d{3})(\\d{3})(\\d+)","$1-$2-$3 ");
-            String joined = String.join("\n" ,name+" | "+phoneNum+"\n");
-            System.out.println(joined);
 
+            String joined;
+
+            /* * Writing(Appending) on the list file located in the 'pathToFile' input  */
+            if (number.length() == 7){
+                String phoneNum = number.replaceFirst("(\\d{3})(\\d+)","$1-$2");
+                joined = String.join("\n" ,name+" | "+phoneNum+"\n");
+
+            }else{
+                String phoneNum = number.replaceFirst("(\\d{3})(\\d{3})(\\d+)","$1-$2-$3 ");
+                joined = String.join("\n" ,name+" | "+phoneNum+"\n");
+            }
             try{
                 Files.writeString(pathToTxtfile, joined, StandardOpenOption.APPEND);
             } catch (IOException iox){
                 iox.printStackTrace();
             }
+
 
             /* * Reading through the list file located in the 'pathToFile' input  */
             List<String> currentList = new ArrayList<>();
@@ -205,11 +210,9 @@ public class ContactFunctions extends Clients {
 
         for (String list : arrays){  // print out the spice
             String[] splitList = list.split("[|]");
-            System.out.printf("| %-15s | %s |\n", splitList[0], splitList[1]);
+            System.out.printf("| %-15s | %13s |\n", splitList[0], splitList[1]);
         }
-
     }
-
 
 
 
