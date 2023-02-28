@@ -1,8 +1,5 @@
 package src.ContactManagerApp;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,10 +7,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-import static java.util.Arrays.asList;
-
 
 public class ContactFunctions extends Clients {
+
+    static Scanner sc = new Scanner(System.in);
+    static Path pathToTxtfile = Paths.get("src/ContactManagerApp/contacts.txt");
+
 
 
     public ContactFunctions(String firstName, String lastName, int phoneNum) {
@@ -25,11 +24,10 @@ public class ContactFunctions extends Clients {
 
 
     public static void askUser(){
-        Path pathToTxtfile = Paths.get("src/ContactManagerApp/contacts.txt");
         boolean wantMore = true;
         do{
-            System.out.println("" +
-                    "\n1. View contacts.\n" +
+            System.out.println("\n" +
+                    "1. View contacts.\n" +
                     "2. Add a new contact.\n" +
                     "3. Search a contact by name.\n" +
                     "4. Delete an existing contact.\n" +
@@ -37,33 +35,29 @@ public class ContactFunctions extends Clients {
                     "Enter an option (1, 2, 3, 4 or 5):");
 
 
-            Scanner sc = new Scanner(System.in);
 
             int answerMain =  Integer.parseInt(sc.nextLine());
 
 
             if(answerMain== 1){
-                readFileAndOutput(pathToTxtfile);
+                readFileAndOutput();
 
             }else if(answerMain == 2){
-                System.out.println("Please enter the name");
-                String name = sc.nextLine();
-                System.out.println("Please enter the number");
-                String number = sc.nextLine();
-                addToList2(pathToTxtfile, name, number);
+
+                addToList2();
 
             }else if(answerMain == 3){
                 System.out.println("Please enter name");
                 String userInput = sc.nextLine();
 
-                readFileAndFilter(pathToTxtfile, userInput);
+                readFileAndFilter(userInput);
 
 
             }else if(answerMain == 4){
-                readFileAndOutput(pathToTxtfile);
+                readFileAndOutput();
                 System.out.println("Please enter contact that you want to delete");
                 String userInput = sc.nextLine();
-                removeFromList(pathToTxtfile, userInput);
+                removeFromList(userInput);
 
 
             }else if(answerMain == 5) {
@@ -113,28 +107,24 @@ public class ContactFunctions extends Clients {
 
 
 
-    public static void readFileAndOutput (Path pathToFile){
+    public static void readFileAndOutput (){
         /* * Reading through the list file located in the 'pathToFile' input and put them into new Array 'currentList'  */
         List<String> currentList = new ArrayList<>();
         try{
-            currentList = Files.readAllLines(pathToFile);  // going to read all of my list
+            currentList = Files.readAllLines(pathToTxtfile);  // going to read all of my list
         }catch (IOException iox){
             iox.printStackTrace();
         }
-        /* * Print out the list file located in the 'pathToFile' input  */
-        System.out.println("Name | Phone number\n-------------------");
+        printList( currentList);
 
-        for (String list : currentList){  // print out the spice
-            System.out.println(list);
-        }
     }
 
 
-    public static void readFileAndFilter (Path pathToFile, String input){
-        /* * Reading through the list file located in the 'pathToFile' input and put them into new Array 'currentList'  */
+    public static void readFileAndFilter (String input){
+        /* * Reading through the list file located in the 'pathToTxtfile' input and put them into new Array 'currentList'  */
         List<String> currentList = new ArrayList<>();
         try{
-            currentList = Files.readAllLines(pathToFile);  // going to read all of my list
+            currentList = Files.readAllLines(pathToTxtfile);  // going to read all of my list
         }catch (IOException iox){
             iox.printStackTrace();
         }
@@ -145,13 +135,8 @@ public class ContactFunctions extends Clients {
                 filteredList.add(user);
             }
         }
+        printList( filteredList);
 
-        /* * Print out the list file located in the 'pathToFile' input  */
-        System.out.println("Name | Phone number\n-------------------");
-
-        for (String spice : filteredList){  // print out the spice
-            System.out.println(spice);
-        }
     }
 
 
@@ -165,64 +150,98 @@ public class ContactFunctions extends Clients {
     }
 
 
-    public static void addToList2(Path pathToFile, String name, String number){
-        /* * Writing(Appending) on the list file located in the 'pathToFile' input  */
-        String phoneNum = number.replaceFirst("(\\d{3})(\\d{3})(\\d+)","$1-$2-$3 ");
-        String joined = String.join("\n" ,name+" | "+phoneNum);
-        System.out.println(joined);
+    public static void addToList2(){
 
-        try{
-            Files.writeString(pathToFile, joined, StandardOpenOption.APPEND);
-        } catch (IOException iox){
-            iox.printStackTrace();
-        }
         /* * Reading through the list file located in the 'pathToFile' input  */
-        List<String> currentList = new ArrayList<>();
+        List<String> ititalList = new ArrayList<>();
         try{
-            currentList = Files.readAllLines(pathToFile);  // going to read all of my list
+            ititalList = Files.readAllLines(pathToTxtfile);  // going to read all of my list
         }catch (IOException iox){
             iox.printStackTrace();
         }
-        System.out.println("Name | Phone number\n-------------------");
-        /* * Print out the list file located in the 'pathToFile' input  */
-        for (String list : currentList){  // print out the spice
-            System.out.println(list);
+
+        System.out.println("Please enter the name");
+        String name = sc.nextLine();
+
+
+        boolean overwrite = false;
+
+
+        for(String user : ititalList){
+            if (user.toLowerCase().contains(name.toLowerCase())){
+                System.out.printf("There's already a contact named %s. Do you want to overwrite it? y / n\n", name);
+                String answer = sc.nextLine();
+                if (answer.equalsIgnoreCase("y")){
+                    overwrite = true;
+                }else{
+                    addToList2();
+                }
+            }else{
+                overwrite = true;
+            }
         }
+
+        System.out.println("Please enter the number");
+        String number = sc.nextLine();
+        int i = 0;
+        while (overwrite == true && i<1){
+            /* * Writing(Appending) on the list file located in the 'pathToFile' input  */
+            String phoneNum = number.replaceFirst("(\\d{3})(\\d{3})(\\d+)","$1-$2-$3 ");
+            String joined = String.join("\n" ,name+" | "+phoneNum+"\n");
+            System.out.println(joined);
+
+            try{
+                Files.writeString(pathToTxtfile, joined, StandardOpenOption.APPEND);
+            } catch (IOException iox){
+                iox.printStackTrace();
+            }
+
+            /* * Reading through the list file located in the 'pathToFile' input  */
+            List<String> currentList = new ArrayList<>();
+            try{
+                currentList = Files.readAllLines(pathToTxtfile);  // going to read all of my list
+            }catch (IOException iox){
+                iox.printStackTrace();
+            }
+            printList( currentList);
+            i++;
+
+        }
+
+
     }
 
-    public static void addToList(Path pathToFile, String input){
+    public static void addToList( String input){
         /* * Writing(Appending) on the list file located in the 'pathToFile' input  */
-        String[] splitContact =   input.split("|", 2);
+        String[] splitContact =   input.split("[|]");
         String name = splitContact[0];
         String phoneNum = splitContact[1];
         phoneNum = input.replaceFirst("(\\d{3})(\\d{3})(\\d+)","$1-$2-$3 ");
         String joined = String.join("\n" ,name, phoneNum);
         System.out.println(joined);
 
+        //                System.out.printf("%-6d | %-7d | %-5d",incre,squared,cubed);
         try{
-            Files.writeString(pathToFile, joined, StandardOpenOption.APPEND);
+            Files.writeString(pathToTxtfile, joined, StandardOpenOption.APPEND);
         } catch (IOException iox){
             iox.printStackTrace();
         }
-        /* * Reading through the list file located in the 'pathToFile' input  */
+        /* * Reading through the list file located in the 'pathToTxtfile' input  */
         List<String> currentList = new ArrayList<>();
         try{
-            currentList = Files.readAllLines(pathToFile);  // going to read all of my list
+            currentList = Files.readAllLines(pathToTxtfile);  // going to read all of my list
         }catch (IOException iox){
             iox.printStackTrace();
         }
-        System.out.println("Name | Phone number\n-------------------");
-        /* * Print out the list file located in the 'pathToFile' input  */
-        for (String list : currentList){  // print out the spice
-            System.out.println(list);
-        }
+        printList( currentList);
+
     }
 
-    public static void removeFromList (Path pathToFile, String input){
+    public static void removeFromList ( String input){
         /* * Reading through the list file located in the 'pathToFile' input  */
         List<String> currentList = new ArrayList<>();
         try{
-            currentList = Files.readAllLines(pathToFile);  // going to read all of my list
+            currentList = Files.readAllLines(pathToTxtfile);  // going to read all of my list
         }catch (IOException iox){
             iox.printStackTrace();
         }
@@ -237,15 +256,23 @@ public class ContactFunctions extends Clients {
         }
         /* * Reading through the list file located in the 'pathToFile' input and put them into new Array 'currentList'  */
         try{
-            Files.write(pathToFile, currentList);
+            Files.write(pathToTxtfile, currentList);
         }catch (IOException iox){
             iox.printStackTrace();
         }
-        System.out.println("Name | Phone number\n-------------------");
+
+        printList( currentList);
+    }
+
+    public static void printList(List<String> arrays){
         /* * Print out the list file located in the 'pathToFile' input  */
-        for (String spice : currentList){  // print out the spice
-            System.out.println(spice);
+        System.out.println("| Name            |  Phone number |\n-----------------------------------");
+
+        for (String list : arrays){  // print out the spice
+            String[] splitList = list.split("[|]");
+            System.out.printf("| %-15s | %s |\n", splitList[0], splitList[1]);
         }
+
     }
 
 }
