@@ -1,4 +1,4 @@
-package src.ContactManagerApp;
+package ContactManagerApp;
 
 import java.io.IOException;
 import java.nio.file.Files;
