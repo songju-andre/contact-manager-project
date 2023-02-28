@@ -172,6 +172,7 @@ public class ContactFunctions extends Clients {
                 System.out.printf("There's already a contact named %s. Do you want to overwrite it? y / n\n", name);
                 String answer = sc.nextLine();
                 if (answer.equalsIgnoreCase("y")){
+                    removeFromList(name);
                     overwrite = true;
                 }else{
                     addToList2();
@@ -260,8 +261,6 @@ public class ContactFunctions extends Clients {
         }catch (IOException iox){
             iox.printStackTrace();
         }
-
-        printList( currentList);
     }
 
     public static void printList(List<String> arrays){
