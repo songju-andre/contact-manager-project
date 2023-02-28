@@ -1,4 +1,4 @@
-package src.ContactManagerApp;
+package ContactManagerApp;
 
 public class Clients {
 
